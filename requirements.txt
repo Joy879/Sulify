@@ -1,0 +1,9 @@
+spotipy
+dash
+sklearn
+numpy
+pandas
+python-dotenv
+requests
+gunicorn
+dash-bootstrap-components
