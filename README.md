@@ -27,7 +27,10 @@ Sulify is a dash multipage app. The structure is as follows:
  ```
  
 The home page is meant to explore a single song's audio features.
-A user searches for a song and selects the specific song and artist from the dropdowm menu and gets to see a preview of the song, audio features displayed as numbers and displayed as graphs
+A user searches for a song and selects the specific song and artist from the dropdowm menu and gets to see a preview of the song, audio features displayed as numbers and displayed as graphs.
+
+
+
 The recommender page is meant to make requests to a [model](https://suliapi.herokuapp.com/docs) hosted as an API. the response is a list of ten songs that the user can preview and also view a graph of similarity scores.
 
 
