@@ -37,12 +37,6 @@ server = app.server
 # ----------------------------------------------------------------------------------##
 #                                  LAYOUT 
 # ----------------------------------------------------------------------------------##
-# navbar = html.Div(
-#     [dbc.NavbarSimple([
-#         dbc.NavItem(
-#             dbc.NavLink(page['name'], href=page['path']))]),
-#             for page in dash.page_registry
-#             ])
 
 app.layout = html.Div(
     children=[
