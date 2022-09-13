@@ -20,9 +20,13 @@ SPOTIPY_CLIENT_ID=os.environ.get('CLIENT_ID')
 SPOTIPY_CLIENT_SECRET=os.environ.get('CLIENT_SECRET')
 auth_manager = SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET)
 sp = spotipy.Spotify(auth_manager=auth_manager)
-
+# ----------------------------------------------------------------------------------##
+#                                  SETUP PAGE DETAILS
+# ----------------------------------------------------------------------------------##
 dash.register_page(__name__, path='/',title='Sulify',name='Sulify')
-
+# ----------------------------------------------------------------------------------##
+#                                  TOOLTIPS
+# ----------------------------------------------------------------------------------##
 tooltip1 = dbc.Tooltip(
             "Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).",
             target="valence",
@@ -40,7 +44,9 @@ tooltip4 = dbc.Tooltip(
             "a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. ",
             target="energy",
         )
-
+# ----------------------------------------------------------------------------------##
+#                                  LAYOUT
+# ----------------------------------------------------------------------------------##
 
 layout = html.Div(
                     [
@@ -157,9 +163,15 @@ def search(value):
 def song_image(value):
     song_name = str(value).split('-')[0]
     artist_name = str(value).split('-')[-1]
-    track_res = sp.search(q='artist:' + artist_name + ' track:' + song_name, limit=1, offset=0, type='track', market=None)
+    track_res = sp.search(q='artist:' + artist_name + ' track:' + song_name,
+                          limit=1,
+                          offset=0,
+                          type='track', market=None)
     track_id = track_res['tracks']['items'][0]['id']
-    iframe = html.Iframe(src=f'https://open.spotify.com/embed/track/{track_id}', width='350', height='425', style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'})
+    iframe = html.Iframe(src=f'https://open.spotify.com/embed/track/{track_id}',
+                         width='350',
+                         height='425',
+                         style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'})
     features = sp.audio_features(track_id)
     return iframe, features
 
@@ -175,7 +187,10 @@ def features(data):
     valence = data[0]['valence']
     acoustic = data[0]['acousticness']
     energy = data[0]['energy']
-    dance, valence, acoustic, energy = f'{round(dance*100, 1)}%',f'{round(valence*100,1)}%',f'{round(acoustic*100, 1)}%',f'{round(energy*100, 1)}%'
+    dance, valence, acoustic, energy = f'{round(dance*100, 1)}%',
+                                       f'{round(valence*100,1)}%',
+                                       f'{round(acoustic*100, 1)}%',
+                                       f'{round(energy*100, 1)}%'
     return  energy, dance, valence, acoustic
 
 
@@ -195,7 +210,11 @@ def render_tab_content(active_tab, data):
         df = pd.DataFrame(data)
         if active_tab == "polar":
             df1 = df[['acousticness', 'danceability', 'energy', 'instrumentalness', 'liveness', 'speechiness', 'valence']]
-            fig = px.line_polar(df1, r=df1.values.flatten(), theta=df1.columns,line_close=True,template='plotly_dark')
+            fig = px.line_polar(df1,
+                                r=df1.values.flatten(),
+                                theta=df1.columns,
+                                line_close=True,
+                                template='plotly_dark')
             fig.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)",
                 plot_bgcolor = "rgba(0,0,0,0)",
