@@ -22,7 +22,7 @@ Sulify is a dash multipage app. The structure is as follows:
 ```bash
 - app.py
 - pages
-   |-- home.py
+   |-- main.py
    |-- recommender.py
  ```
  
