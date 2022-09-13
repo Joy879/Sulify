@@ -22,16 +22,22 @@ SPOTIPY_CLIENT_SECRET=os.environ.get('CLIENT_SECRET')
 auth_manager = SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET)
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
-
+# -------------------------------------------------------------------------------------------------------------------------------------------##
+#                                  DEFINING HOW PREDITIONS WILL BE RETRIEVED FROM API
+# -------------------------------------------------------------------------------------------------------------------------------------------##
 def get_predictions(genre, test_feat):
     url = 'https://suliapi.herokuapp.com/predict?genre={genre}&test_feat={test_feat}'.format(genre = genre, test_feat = test_feat)
     response = requests.get(url)
     json_response = response.json()
     uris =json_response['uris']
     return uris
-
+# ------------------------------------------------------------------------------------------------------------------------------------------##
+#                                  SETUP PAGE DETAILS
+# ------------------------------------------------------------------------------------------------------------------------------------------##
 dash.register_page(__name__, path='/Recommendations',title='Sulify Recommender',name='Sulify Recommender')
-
+# ------------------------------------------------------------------------------------------------------------------------------------------##
+#                                               LAYOUT
+# ------------------------------------------------------------------------------------------------------------------------------------------##
 layout = html.Div(
                     [
                         html.Div( children=[
@@ -68,7 +74,9 @@ layout = html.Div(
                             dbc.Button("View similarity Scores", id='similarity'),
                             dbc.Row(id='tsne-graph')
                         ])]),])
-
+# ------------------------------------------------------------------------------------------------------------------------------------------##
+#                                      CALLBACKS
+# ------------------------------------------------------------------------------------------------------------------------------------------##
 
 @callback(
     Output('song-store','data'),
