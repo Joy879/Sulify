@@ -17,21 +17,20 @@ I wanted to explore how recommender systems work and use Python based tools for 
 
 ### How it works :feet:
 
-Sulify is a dash multipage app. The structure is as follows:
+Sulify is a dash app. The structure is as follows:
 
 ```bash
 - app.py
-- pages
-   |-- main.py
-   |-- recommender.py
+   |-- audio features
+   |-- recommender
  ```
  
-The home page is meant to explore a single song's audio features.
+The audio features tab is meant to explore a single song's features.
 A user searches for a song and selects the specific song and artist from the dropdowm menu and gets to see a preview of the song, audio features displayed as numbers and displayed as graphs.
 
 
 
-The recommender page is meant to make requests to a [model](https://suliapi.herokuapp.com/docs) hosted as an API. the response is a list of ten songs that the user can preview and also view a graph of similarity scores.
+The recommender tab is meant to make requests to a [model](https://suliapi.herokuapp.com/docs) hosted as an API. the response is a list of ten songs that the user can preview and also view a graph of similarity scores.
 
 
 ### Main libraries used: :books:
@@ -74,5 +73,5 @@ If you have any ideas or suggestions or contributions feel free to reach out to 
 ### Author :black_nib:
 #### Joy Wanjiru
 
-I am a data science enthusiast and a software engineering student at ALX and I love working with Python especially because of it's vast pool of libraries for scientific computing
+I am a data science enthusiast and a software engineering graduate from ALX and I love working with Python especially because of it's vast pool of libraries for scientific computing
 
