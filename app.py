@@ -202,6 +202,9 @@ app.layout = html.Div(
     Input('search-input', 'value'),
 )
 def search(value):
+    """Function that helps us work the with spotify API to search for songs related to keywords the user types in.
+    The output is a list of songs and their respective artist.
+    The user can see them displayed in a dropdown menu"""
     search_results=[]
     if value is not None and len(str(value)) > 0:
         tracks = sp.search(q='track:'+ value,type='track', limit=20)
@@ -221,7 +224,9 @@ def input_triggers_nested(value):
     Output('main_store', 'data'),
     Input('music-list', 'value'),
 )
-def song_image(value):
+def song_preview(value):
+    """Function that helps us show the user a preview of the song they select from the dropdown menu.
+    Also this function helps extract the song's audio features"""
     song_name = str(value).split('-')[0]
     artist_name = str(value).split('-')[-1]
     track_res = sp.search(q='artist:' + artist_name + ' track:' + song_name, limit=1, offset=0, type='track', market=None)
@@ -239,6 +244,7 @@ def song_image(value):
     Input('music-list', 'value')
 )
 def recommender(n_clicks, value):
+    """Function that helps get recommendations of similar songs to the one the user searched for"""
     if n_clicks and value is not None:
         song_name = str(value).split('-')[0]
         artist_name = str(value).split('-')[-1]
@@ -271,6 +277,7 @@ def input_triggers_nested(value):
     Input('music-list', 'value')
 )
 def tsnegraph(rdata, n_clicks, sdata, value):
+    """Function that helps plot a similarity graph of the recommended songs and the initial song the user selected."""
     if n_clicks and rdata is not None:
         all_data = pd.DataFrame()
         song = pd.Series()
@@ -313,6 +320,7 @@ def tsnegraph(rdata, n_clicks, sdata, value):
     Input('main_store', 'data'),
     )
 def features(data):
+    """Function that displays for audio features for the user to understand it's composition"""
     dance = data[0]['danceability']
     valence = data[0]['valence']
     acoustic = data[0]['acousticness']
