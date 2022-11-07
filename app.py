@@ -1,7 +1,6 @@
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------##
 #                                                                   IMPORTS 
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------##
-from logging import PlaceHolder
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import pandas as pd
@@ -10,7 +9,6 @@ from dash import html, dcc, dash_table
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
-import plotly.graph_objects as go
 from dotenv import load_dotenv
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
