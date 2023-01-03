@@ -55,10 +55,10 @@ Dash has two main parts:
 
 #### Prerequisites:
 
-- [ ] An Spotify free account which will give you access to an API key
+- [ ] A Spotify free account which will give you access to an API key
 
          
-              git clone this project into your machine
+              git clone https://github.com/Joy879/Sulify
               pip install -r requirements.txt
  
 ### Licensing :lock:
