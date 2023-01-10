@@ -1,14 +1,17 @@
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------##
+# --------------------------------------------------------------------------------------------------------------------------------------##
 #                                                                   IMPORTS 
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------##
+# --------------------------------------------------------------------------------------------------------------------------------------##
+from logging import PlaceHolder
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import pandas as pd
+import random
 import dash
 from dash import html, dcc, dash_table
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 import plotly.express as px
+import plotly.graph_objects as go
 from dotenv import load_dotenv
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
@@ -19,28 +22,28 @@ load_dotenv()
 import warnings
 warnings.filterwarnings('ignore')
 
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------##
+# --------------------------------------------------------------------------------------------------------------------------------------##
 #                                                       LOADING SECRETS
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------##
+# --------------------------------------------------------------------------------------------------------------------------------------##
 
 SPOTIPY_CLIENT_ID=os.environ.get('CLIENT_ID')
 SPOTIPY_CLIENT_SECRET=os.environ.get('CLIENT_SECRET')
 auth_manager = SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET)
 sp = spotipy.Spotify(auth_manager=auth_manager)
 
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------##
+# --------------------------------------------------------------------------------------------------------------------------------------##
 #                                                       INITIALIZING APP 
-# -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------##
+# --------------------------------------------------------------------------------------------------------------------------------------##
 
 
 external_stylesheets = [dbc.themes.CYBORG, 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets, meta_tags=[{"name": "viewport", "content": "width=device-width"}])
 app.title = "Sulify"
 server = app.server
 
-# ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------##
+# -------------------------------------------------------------------------------------------------------------------------------------##
 #                                                   SETUP SULIAPI AND TOOLTIPS
-# ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------##
+# -------------------------------------------------------------------------------------------------------------------------------------##
 
 def get_predictions(genre, test_feat):
     url = 'https://suliapi.herokuapp.com/predict?genre={genre}&test_feat={test_feat}'.format(genre = genre, test_feat = test_feat)
@@ -65,10 +68,17 @@ tooltip3 = dbc.Tooltip(
 tooltip4 = dbc.Tooltip(
                     "a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. ",
                     target="energy",
-                )
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+ 
+               )
+alert1 = dbc.Alert("Well what's a similarity score if there is nothing to compare.", color='info')
+alert2 = dbc.Alert("Simply put, we need several songs for this graph to show", color='info')
+alert3 = dbc.Alert("None for now, enjoy the colorful spinning circles", color='secondary')
+alert4 = dbc.Alert("I'm afraid its time to choose another song", color='info')
+
+alerts = [alert1, alert2, alert3, alert4]
+#------------------------------------------------------------------------------------------------------------------------------#
 #                                                   LAYOUT
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------------------------------------------------#
 
 app.layout = html.Div(
     children=[
@@ -117,9 +127,9 @@ app.layout = html.Div(
                                 tab_id= "audio",
                                 label_style={'font-size':'15px'}, 
                                 children=[
-                                    html.Hr(),
-                                    dbc.Row( children=[
                                     html.Br(),
+                                    dbc.Row( children=[
+                                    
                                     dbc.Row(
                                         children=[
                                             dbc.Col(dbc.Card([
@@ -177,13 +187,15 @@ app.layout = html.Div(
                                 tab_id= "recommender",
                                 label_style={'font-size':'15px'},
                                 children=[
-                                    html.Hr(),
+                                    html.Br(),
                                     dbc.Button("Get Recommendations", id='recommender'),
-                                    html.H3("Similar Songs"),
+                                    
                                     dcc.Loading(
                                     id="loading-2",
                                     type="circle",
-                                    children=[dbc.Row( className='row row-cols-auto', id='song-results'),]),
+                                    children=[
+                                        html.H4("Similar Songs"),
+                                        dbc.Row( className='row row-cols-auto', id='song-results'),]),
                                     dcc.Store(id='rec-store'),
                                     dcc.Store(id='song-store'),
                                     dbc.Button("View similarity Scores", id='similarity'),
@@ -193,18 +205,15 @@ app.layout = html.Div(
                                     children=[dbc.Row(id='tsne-graph')]),
                                 ])
                         ], id="tabs1", active_tab="audio")])])
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------------------------------------------------#
 #                                                   CALLBACKS
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------------------------------------------------#
 
 @app.callback(
     Output('music-list', 'options'),
     Input('search-input', 'value'),
 )
 def search(value):
-    """Function that helps us work the with spotify API to search for songs related to keywords the user types in.
-    The output is a list of songs and their respective artist.
-    The user can see them displayed in a dropdown menu"""
     search_results=[]
     if value is not None and len(str(value)) > 0:
         tracks = sp.search(q='track:'+ value,type='track', limit=20)
@@ -224,14 +233,12 @@ def input_triggers_nested(value):
     Output('main_store', 'data'),
     Input('music-list', 'value'),
 )
-def song_preview(value):
-    """Function that helps us show the user a preview of the song they select from the dropdown menu.
-    Also this function helps extract the song's audio features"""
+def song_image(value):
     song_name = str(value).split('-')[0]
     artist_name = str(value).split('-')[-1]
     track_res = sp.search(q='artist:' + artist_name + ' track:' + song_name, limit=1, offset=0, type='track', market=None)
     track_id = track_res['tracks']['items'][0]['id']
-    iframe = html.Iframe(src=f'https://open.spotify.com/embed/track/{track_id}', width='70%', height='100%', style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'})
+    iframe = html.Iframe(src=f'https://open.spotify.com/embed/track/{track_id}', width='90%', height='100', style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'})
     features = sp.audio_features(track_id)
     return iframe, features
 
@@ -244,7 +251,6 @@ def song_preview(value):
     Input('music-list', 'value')
 )
 def recommender(n_clicks, value):
-    """Function that helps get recommendations of similar songs to the one the user searched for"""
     if n_clicks and value is not None:
         song_name = str(value).split('-')[0]
         artist_name = str(value).split('-')[-1]
@@ -257,11 +263,14 @@ def recommender(n_clicks, value):
         test_feat = []
         for val in vals:
             test_feat.append(features[0][val])
-        uris = get_predictions(genre, test_feat)
-        songs = []
-        for uri in uris[:10]:
-            songs.append(html.Iframe(src=f'https://open.spotify.com/embed/track/{uri}', width='350', height='100', style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'}))
-        return features, uris[:10], songs
+        try:
+            uris = get_predictions(genre, test_feat)
+            songs = []
+            for uri in uris[:10]:
+                songs.append(html.Iframe(src=f'https://open.spotify.com/embed/track/{uri}', width='350', height='100', style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'}))
+            return features, uris[:10], songs
+        except requests.JSONDecodeError:
+            return None, None, dbc.Alert("Sorry it seems you have better music taste than us", color="info")
     elif value is None:
         return None, None, dbc.Alert("Please search and select one song .", color="warning")
 def input_triggers_nested(value):
@@ -277,7 +286,6 @@ def input_triggers_nested(value):
     Input('music-list', 'value')
 )
 def tsnegraph(rdata, n_clicks, sdata, value):
-    """Function that helps plot a similarity graph of the recommended songs and the initial song the user selected."""
     if n_clicks and rdata is not None:
         all_data = pd.DataFrame()
         song = pd.Series()
@@ -296,7 +304,7 @@ def tsnegraph(rdata, n_clicks, sdata, value):
         all_data = pd.concat([all_data, s_data])
         all_data = all_data.reset_index()
         X = (all_data.filter(['acousticness', 'danceability', 'duration_ms', 'energy',
-          'instrumentalness', 'liveness', 'loudness', 'tempo', 'valence']))
+        'instrumentalness', 'liveness', 'loudness', 'tempo', 'valence']))
 
         # algo will do better if data is standardized (zero mean, unit variance)
         Xs = StandardScaler().fit_transform(X)
@@ -307,9 +315,16 @@ def tsnegraph(rdata, n_clicks, sdata, value):
         tsne['duration_ms'] = all_data['duration_ms']
         tsne['Song name'] = all_data['song_name']
         fig = px.scatter(tsne, x=0, y=1, size='duration_ms', size_max=60, hover_name='Song name',template='plotly_dark',color='Song name', title="Similarity Scores")
+        fig.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor = "rgba(0,0,0,0)")
         return dcc.Graph(figure=fig)
-    elif rdata is None:
-        return dbc.Alert("Please get song recommendations.", color='warning')
+        
+
+    elif rdata and sdata is None:
+        return random.choice(alerts)
+    else:
+        return dbc.Alert("Please get song recommendations", color='warning')
 
 
 @app.callback(
@@ -320,7 +335,6 @@ def tsnegraph(rdata, n_clicks, sdata, value):
     Input('main_store', 'data'),
     )
 def features(data):
-    """Function that displays for audio features for the user to understand it's composition"""
     dance = data[0]['danceability']
     valence = data[0]['valence']
     acoustic = data[0]['acousticness']
@@ -390,9 +404,9 @@ def render_tab_content(active_tab, data):
             
     return "No tab selected"
 
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------------##
 #                                   LAUNCH
-#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------#
+# ----------------------------------------------------------------------------------##
     
 if __name__ == "__main__":
     app.run_server(debug=True)
