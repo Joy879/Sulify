@@ -1,6 +1,7 @@
 spotipy
 dash
 sklearn
+scikit-learn
 numpy
 pandas
 python-dotenv
