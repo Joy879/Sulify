@@ -11,7 +11,7 @@ A simple song recommender
 A song recommender that takes in data from [Spotify API](https://developer.spotify.com/documentation/web-api/) and displays various aspects in a dashboard. 
 I wanted to explore how recommender systems work and use Python based tools for development since its the go to language for most Data Science projects.
 
-* View the webapp [here](https://sulify.herokuapp.com/)
+* View the webapp [here](https://sulify.onrender.com/)
 
 
 ### How it works :feet:
