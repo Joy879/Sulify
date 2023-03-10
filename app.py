@@ -238,7 +238,10 @@ def song_image(value):
     artist_name = str(value).split('-')[-1]
     track_res = sp.search(q='artist:' + artist_name + ' track:' + song_name, limit=1, offset=0, type='track', market=None)
     track_id = track_res['tracks']['items'][0]['id']
-    iframe = html.Iframe(src=f'https://open.spotify.com/embed/track/{track_id}', width='90%', height='100', style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'})
+    iframe = html.Iframe(src=f'https://open.spotify.com/embed/track/{track_id}?utm_source=generator&theme=0', width='80%',
+     height='80',
+      style={'border-radius':'12px', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'},
+       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture")
     features = sp.audio_features(track_id)
     return iframe, features
 
