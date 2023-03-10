@@ -21,6 +21,7 @@ import os
 load_dotenv()
 import warnings
 warnings.filterwarnings('ignore')
+import random
 
 # --------------------------------------------------------------------------------------------------------------------------------------##
 #                                                       LOADING SECRETS
@@ -70,12 +71,14 @@ tooltip4 = dbc.Tooltip(
                     target="energy",
  
                )
-alert1 = dbc.Alert("Well what's a similarity score if there is nothing to compare.", color='info')
-alert2 = dbc.Alert("Simply put, we need several songs for this graph to show", color='info')
+ssalert1 = dbc.Alert("Well what's a similarity score if there is nothing to compare.", color='info')
+ssalert2 = dbc.Alert("Simply put, we need several songs for this graph to show", color='secondary')
 alert3 = dbc.Alert("None for now, enjoy the colorful spinning circles", color='secondary')
 alert4 = dbc.Alert("I'm afraid its time to choose another song", color='info')
+alert5 = dbc.Alert("Sorry it seems you have better music taste than us", color="info")
 
-alerts = [alert1, alert2, alert3, alert4]
+alerts = [ alert3, alert4, alert5]
+ssalerts = [ssalert1, ssalert2]
 #------------------------------------------------------------------------------------------------------------------------------#
 #                                                   LAYOUT
 #------------------------------------------------------------------------------------------------------------------------------#
@@ -270,12 +273,12 @@ def recommender(n_clicks, value):
             uris = get_predictions(genre, test_feat)
             songs = []
             for uri in uris[:10]:
-                songs.append(html.Iframe(src=f'https://open.spotify.com/embed/track/{uri}', width='350', height='100', style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'}))
+                songs.append(html.Iframe(src=f'https://open.spotify.com/embed/track/{uri}', width='350', height='80', style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'}))
             return features, uris[:10], songs
         except requests.JSONDecodeError:
-            return None, None, dbc.Alert("Sorry it seems you have better music taste than us", color="info")
+            return None, None, random.choice(alerts)
     elif value is None:
-        return None, None, dbc.Alert("Please search and select one song .", color="warning")
+        return None, None, dbc.Alert("Please search and select one song .", color="info")
 def input_triggers_nested(value):
     time.sleep(2)
     return value
@@ -325,9 +328,9 @@ def tsnegraph(rdata, n_clicks, sdata, value):
         
 
     elif rdata and sdata is None:
-        return random.choice(alerts)
+        return random.choice(ssalerts)
     else:
-        return dbc.Alert("Please get song recommendations", color='warning')
+        return dbc.Alert("Please get song recommendations", color='secondary')
 
 
 @app.callback(

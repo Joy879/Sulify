@@ -2,3 +2,4 @@ venv/
 .cache
 logs.log
 *.pyc
+.env
