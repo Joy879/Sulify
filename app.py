@@ -47,7 +47,7 @@ server = app.server
 # -------------------------------------------------------------------------------------------------------------------------------------##
 
 def get_predictions(genre, test_feat):
-    url = 'https://suliapi.herokuapp.com/predict?genre={genre}&test_feat={test_feat}'.format(genre = genre, test_feat = test_feat)
+    url = 'https://suliapi.onrender.com/predict?genre={genre}&test_feat={test_feat}'.format(genre = genre, test_feat = test_feat)
     response = requests.get(url)
     json_response = response.json()
     uris =json_response['uris']
