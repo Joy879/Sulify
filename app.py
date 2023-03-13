@@ -274,7 +274,7 @@ def recommender(n_clicks, value):
             songs = []
             for uri in uris[:10]:
                 songs.append(html.Iframe(src=f'https://open.spotify.com/embed/track/{uri}?utm_source=generator&theme=0', width='350', height='80', 
-                                         style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'}, allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"))
+                                         style={'border-radius': '12px', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'}, allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"))
             return features, uris[:10], songs
         except requests.JSONDecodeError:
             return None, None, random.choice(alerts)
