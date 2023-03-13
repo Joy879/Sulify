@@ -273,7 +273,8 @@ def recommender(n_clicks, value):
             uris = get_predictions(genre, test_feat)
             songs = []
             for uri in uris[:10]:
-                songs.append(html.Iframe(src=f'https://open.spotify.com/embed/track/{uri}', width='350', height='80', style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'}))
+                songs.append(html.Iframe(src=f'https://open.spotify.com/embed/track/{uri}?utm_source=generator&theme=0', width='350', height='80', 
+                                         style={'border-style': 'none', 'background-color':'rgba(0,0,0,0)', 'font-size':'15px'}, allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"))
             return features, uris[:10], songs
         except requests.JSONDecodeError:
             return None, None, random.choice(alerts)
