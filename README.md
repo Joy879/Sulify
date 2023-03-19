@@ -29,7 +29,7 @@ A user searches for a song and selects the specific song and artist from the dro
 
 
 
-The recommender tab is meant to make requests to a [model](https://suliapi.onrender.com/docs) hosted as an API. the response is a list of ten songs that the user can preview and also view a graph of similarity scores.
+The recommender tab is meant to make requests to a [model](https://suliapi.onrender.com/docs) hosted as an API. The response is a list of ten songs that the user can preview and also view a graph of similarity scores.
 
 
 ### Main libraries used: :books:
