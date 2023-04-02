@@ -65,7 +65,7 @@ Dash has two main parts:
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/Joy879/Sulify/blob/main/LICENSE) file for details.
 
 ### Future
-I am looking forward to collecting more data to make the recommender model more accurate and faster. This project is my own way of exploring various strategies of  implementing recommender systems. The accuracy vs speed tradeoff is definitely an issue i'd like to dive deeper into even as I learn how to optimize the app to work with larger datasets. I would also like to allow a user to login to spotify from the app and be able to save the recommended songs into a playlist.
+I am looking forward to collecting more data to make the recommender model more accurate and faster. This project is my own way of exploring various strategies of  implementing content-based recommender systems. The accuracy vs speed tradeoff is definitely an issue i'd like to dive deeper into even as I learn how to optimize the app to work with larger datasets. I would also like to allow a user to login to spotify from the app and be able to save the recommended songs into a playlist.
 If you have any ideas or suggestions or contributions feel free to reach out to me via [mail](joywanjiru879@gmail.com) :e-mail:
 
 
