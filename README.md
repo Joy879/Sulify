@@ -1,6 +1,6 @@
 # Sulify
 
-A simple song recommender
+A simple song recommender.
 
 
 
