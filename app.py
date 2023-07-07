@@ -403,7 +403,7 @@ def render_tab_content(active_tab, data):
                 title_font_family="Century Gothic",
                 title_font_color="#e7d7f1",
                 title_font_size=20,
-                xaxis = dict(showgrid=False),
+                xaxis = dict(showgrid=False,"categoryorder":"total descending"),
                 yaxis = dict(title =None, showgrid = False)
                 )
             bar = dcc.Graph(figure=fig)
